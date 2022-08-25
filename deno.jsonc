@@ -1,0 +1,8 @@
+{
+	"compilerOptions": {
+		"jsxFactory": "h"
+	},
+	"tasks": {
+		"dev": "export DEV=true && deno run -A --watch main.tsx"
+	}
+}
