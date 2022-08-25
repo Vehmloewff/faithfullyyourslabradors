@@ -135,7 +135,7 @@ function HomePage() {
 				</div>
 
 				<div class="absolute inset-0">
-					<img class="absolute inset-0 object-fit-center object-fit-cover" src="/relax.webp" />
+					<div class="absolute inset-0 bg-center bg-cover" style="background-image: url('/relax.webp')" />
 					<div class="absolute inset-0 bg-dark-30" />
 				</div>
 			</section>
