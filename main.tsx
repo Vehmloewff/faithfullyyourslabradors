@@ -128,9 +128,11 @@ function HomePage() {
 				</div>
 			</Section>
 
-			<section class="bg-center bg-cover relative">
-				<script src="https://apps.elfsight.com/p/platform.js" defer></script>
-				<div class="elfsight-app-a6fd074c-7fe2-4fb5-ae3b-9c6131949093 px-20 pt-100 relative z-10"></div>
+			<section class="bg-center bg-cover relative overflow-hidden">
+				<div class="relative z-10 px-20 pt-100 mx-auto max-w-5xl">
+					<script src="https://apps.elfsight.com/p/platform.js" defer></script>
+					<div class="elfsight-app-a6fd074c-7fe2-4fb5-ae3b-9c6131949093"></div>
+				</div>
 
 				<div class="absolute inset-0">
 					<img class="absolute inset-0 object-fit-center object-fit-cover" src="/relax.webp" />
