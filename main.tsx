@@ -128,14 +128,14 @@ function HomePage() {
 				</div>
 			</Section>
 
-			<section class="bg-center bg-cover relative" style="background-image: url('/relax.webp');">
-				{/* <img src="/relax.webp" class="absolute inset-0 object-fit-center object-fit-cover" />
-				<div class="absolute inset-0 dark-20"></div>
+			<section class="bg-center bg-cover relative">
+				<script src="https://apps.elfsight.com/p/platform.js" defer></script>
+				<div class="elfsight-app-a6fd074c-7fe2-4fb5-ae3b-9c6131949093 px-20 pt-100 relative z-10"></div>
+
 				<div class="absolute inset-0">
-					<div class="h-100"></div>
-					<h2 class="text-2xl md:text-4xl font-bold font-head text-center">Reviews</h2>
-					<div class="h-500"></div>
-				</div> */}
+					<img class="absolute inset-0 object-fit-center object-fit-cover" src="/relax.webp" />
+					<div class="absolute inset-0 bg-dark-30" />
+				</div>
 			</section>
 
 			<footer class="p-20 flex flex-col items-center md:flex-row gap-20">

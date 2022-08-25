@@ -5,6 +5,8 @@ const description = 'Purebred English Polar Bear White Labradors\nPurebred Ameri
 const site = 'https://faithfullyyourslabradors.com'
 const heroImagePath = `${site}/hero.webp`
 
+const reviewStyles = `<style>.bTduCZ, .fFcWqO { background-color: rgb(247, 247, 247) !important } .gduAeC { color: rgb(247, 247, 247) !important } </style>`
+
 export const makeTemplate = (styleTag: string, bodyTag: string, includeReload: boolean) => (
 	<html lang="en">
 		<head>
@@ -34,11 +36,15 @@ export const makeTemplate = (styleTag: string, bodyTag: string, includeReload: b
 
 			{styleTag}
 
+			{reviewStyles}
+
 			{includeReload ? <script>{reloadScript}</script> : ''}
 		</head>
 		{bodyTag}
 	</html>
 )
+
+// ChIJecRWw2A9socR4FF6ZeVT8sw
 
 const reloadScript = `
 
