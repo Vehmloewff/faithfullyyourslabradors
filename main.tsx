@@ -98,8 +98,8 @@ function HomePage() {
 					</div>
 					<div class="flex gap-8 justify-center">
 						Email:
-						<a href="mailto:faithfullyyourslabs@gmail.com" class={link}>
-							faithfullyyourslabs@gmail.com
+						<a href="mailto:faithfullyyourslabradors@gmail.com" class={link}>
+							faithfullyyourslabradors@gmail.com
 						</a>
 					</div>
 					<div class="h-20"></div>
