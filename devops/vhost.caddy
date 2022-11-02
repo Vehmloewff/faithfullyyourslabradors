@@ -1,0 +1,42 @@
+# Put this in the top level of your website, then add to Caddyfile
+# import /home/syncjs/vhost.caddy
+# then `caddy reload`
+
+# Main
+www.syncjs.dev {
+	root * /home/syncjs/main
+	encode zstd gzip
+	route {
+		# Proxy to node app
+		reverse_proxy * localhost:5015
+	}
+	log {
+		output file ./syncjs/log/syncjs.dev.log {
+			roll_size 1mb
+			roll_keep 4
+			roll_keep_for 24h
+			format single_field common_log
+		}
+	}
+}
+syncjs.dev {
+	redir https://www.syncjs.dev{uri}
+}
+
+# Staging
+staging.syncjs.dev {
+	root * /home/syncjs/staging
+	encode zstd gzip
+	route {
+		# Proxy to node app
+		reverse_proxy * localhost:4015
+	}
+	log {
+		output file ./syncjs/log/staging.syncjs.dev.log {
+			roll_size 1mb
+			roll_keep 4
+			roll_keep_for 24h
+			format single_field common_log
+		}
+	}
+}

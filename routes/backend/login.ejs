@@ -1,0 +1,60 @@
+<script sync>
+  const User = require('~/models/User')
+
+  const showError = (ctx, $, error) => {
+    $.error = error
+
+    return ctx.render($, '#error')
+  }
+
+  on.mount = (ctx, $) => {
+    $.title = 'Login'
+    $._formErrors = {}
+
+    return ctx.render($)
+  }
+
+  on.login = async (ctx, $) => {
+    const { email, password } = ctx.payload
+
+    if (!email) return showError(ctx, $, 'You must enter an email')
+    if (!password) return showError(ctx, $, 'You must enter a password')
+
+    const user = await User.findOne({ email })
+    if (!user) return showError(ctx, $, 'User does not exist')
+
+    const passwordOk = await user.checkPassword(password)
+    if (!passwordOk) return showError(ctx, $, 'Wrong password')
+
+    ctx.session.user = user
+    ctx.session.save()
+
+    return ctx.redirect('/backend')
+  }
+</script>
+
+<div class="md:bg-dark-5 md:h-full md:flex md:items-center md:justify-center" id="html">
+  <div class="container md:bg-light-1 md:rounded md:max-w-sm md:shadow-xl">
+    <form s-submit="login">
+      <h2>Sign In</h2>
+
+      <div id="error">
+        <% if ($.error) { %>
+        <div class="bg-error text-light-1 rounded p-4"><%= $.error %></div>
+        <% } %>
+      </div>
+
+      <fieldset id="email-fs">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" />
+      </fieldset>
+
+      <fieldset id="password-fs">
+        <label for="email">Password</label>
+        <input type="password" id="password" name="password" />
+      </fieldset>
+
+      <button>Login</button>
+    </form>
+  </div>
+</div>

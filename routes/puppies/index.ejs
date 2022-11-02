@@ -1,0 +1,28 @@
+<script sync>
+  const Litter = require('~/models/Litter')
+
+  on.mount = async (ctx, $) => {
+    $.title = 'Puppies'
+    $.litters = await Litter.find({ sellingDeposits: true })
+
+    return ctx.render($)
+  }
+</script>
+
+<section class="container">
+  <h1>Puppies</h1>
+
+  <% if (!$.litters.length) { %>
+
+  <p>Sadly, there are no puppies available at this time.</p>
+  <p>You can learn about future availability by <a href="/contact">contacting us</a>.</p>
+
+  <% } else { for (let litter of $.litters) { %>
+
+  <tr class="hover:cursor-pointer" s-click="editBook" s-payload="<%= book.id %>">
+    <td><%= litter.title %></td>
+    <td><%= litter.author %></td>
+  </tr>
+
+  <% } %> <% } %>
+</section>

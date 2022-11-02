@@ -1,0 +1,80 @@
+<script sync>
+  const Litter = require('~/models/Litter')
+  const Deposit = require('~/models/Deposit')
+  const validate = require('~/lib/validate')
+  const { openPanel, closePanel } = require('~/lib/panel')
+
+  async function getLitters($) {
+    $.litters = await Litter.find({})
+
+    for (const litter of $.litters) {
+      const deposits = await Deposit.find({ litterId: litter.id })
+
+      litter.numberOfDeposits = deposits.length
+      litter.numberOfConfirmedDeposits = deposits.filter((deposit) => deposit.confirmed).length
+    }
+  }
+
+  on.mount = async (ctx, $) => {
+    if (!ctx.session.user) return ctx.redirect('/backend/login')
+
+    $.title = 'Admin Panel'
+    $._formErrors = {}
+    await getLitters($)
+
+    return ctx.render($)
+  }
+
+  on.openCreateLitterPanel = async (ctx, $) => {
+    openPanel(ctx, $, 'create_litter')
+
+    return ctx.render($, ['#panel', '#panel-backdrop'])
+  }
+
+  on.cancelPanel = async (ctx, $) => {
+    closePanel(ctx, $)
+
+    return ctx.render($, '#panel')
+  }
+
+  on.createLitter = async (ctx, $) => {
+    closePanel(ctx, $)
+
+    await Litter.create(ctx.payload)
+    await getLitters($)
+
+    return ctx.render($, ['#litters', '#panel'])
+  }
+
+  on.validate = (ctx, $) => {
+    return validate(ctx, $, Litter)
+  }
+</script>
+
+<section class="h-full container">
+  <h2>Admin Panel</h2>
+
+  <hr />
+
+  <div class="flex flex-col" id="litters">
+    <% for (let litter of $.litters) { %>
+    <a
+      class="custom flex gap-4 items-center border-1 p-4 bg-light-3 rounded hover:bg-light-4 cursor-pointer transition-colors"
+      href="/backend/litter/<%= litter.id %>"
+    >
+      <img src="<%= litter.imageUrl %>" class="rounded-full h-12 w-12 object-cover object-center" />
+
+      <div class="flex-1 flex flex-col gap-2">
+        <div class="text-lg"><%= litter.title %></div>
+        <div class="text-sm text-dark-4">
+          <span><%= litter.expectedCount %></span> puppies expected -
+          <span><%= litter.numberOfDeposits %></span> deposits made -
+          <span><%= litter.numberOfConfirmedDeposits %></span> deposits confirmed.
+        </div>
+      </div>
+    </a>
+    <% } %>
+  </div>
+
+  <button s-click="openCreateLitterPanel">Add New Litter</button>
+</section>

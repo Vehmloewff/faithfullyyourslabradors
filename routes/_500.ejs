@@ -1,0 +1,23 @@
+<div class="page">
+  <!-- Display errors for dev env? -->
+  <% if (error.env === 'dev') { %>
+
+  <!-- Show error name or standard 500 -->
+  <h3 class="text-error"><%= error.name ? `Error: ${error.name}` : '500 – Internal Server Error' %></h3>
+
+  <!-- Show error message? -->
+  <% if (error.message) { %>
+  <h4 class="text-dark-3 -mt-2"><%= error.message %></h4>
+    <Input></Input>
+  <% } %>
+
+  <!-- Show error stacktrace? -->
+  <% if (error.stack) { %>
+  <pre class="text-slate-700 bg-yellow-100 px-4 py-8 rounded-sm text-xs overflow-x-auto"><%= error.stack %></pre>
+  <% } %>
+
+  <!-- Otherwise, show standard 500 page -->
+  <% } else { %>
+  <h3 class="text-error">500 – Internal Server Error</h3>
+  <% } %>
+</div>

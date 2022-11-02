@@ -1,0 +1,36 @@
+<script sync>
+  const Litter = require('~/models/Litter')
+  const { openPanel, initPanel } = require('~/lib/panel')
+
+  initPanel(on)
+
+  on.mount = async (ctx, $) => {
+    $.id = ctx.req.params.id
+    $.title = 'Ho ho'
+    $.litter = await Litter.findOne({ _id: $.id })
+
+    if (!$.litter) return ctx._404()
+
+    return ctx.render($)
+  }
+
+  on.openEditPanel = async (ctx, $) => {
+    openPanel(ctx, $, {
+      title: 'Edit Litter',
+      submitAction: 'saveLitter',
+      easyClose: true,
+      fields: [],
+      buttons: []
+    })
+
+    return ctx.render($)
+  }
+</script>
+
+<div class="container">
+  <div class="flex items-center">
+    <h2 class="flex-1"><%= $.litter.title %></h2>
+
+    <button class="mt-5" s-click="openEditPanel">Edit</button>
+  </div>
+</div>
