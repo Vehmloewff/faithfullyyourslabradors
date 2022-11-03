@@ -15,6 +15,7 @@
   }
 
   on.login = async (ctx, $) => {
+    ctx.payload.email = ctx.payload.email.toLowerCase()
     const { email, password } = ctx.payload
 
     if (!email) return showError(ctx, $, 'You must enter an email')

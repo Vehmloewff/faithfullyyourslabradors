@@ -1,63 +1,7 @@
 <script sync>
-  const Litter = require('~/models/Litter')
-  const Deposit = require('~/models/Deposit')
-  const validate = require('~/lib/validate')
-  const { openPanel, closePanel } = require('~/lib/panel')
-
-  async function getLitters($) {
-    $.litters = await Litter.find({})
-
-    for (const litter of $.litters) {
-      const deposits = await Deposit.find({ litterId: litter.id })
-
-      litter.numberOfDeposits = deposits.length
-      litter.numberOfConfirmedDeposits = deposits.filter((deposit) => deposit.confirmed).length
-    }
-  }
-
   on.mount = async (ctx, $) => {
     if (!ctx.session.user) return ctx.redirect('/backend/login')
 
-    $.title = 'Admin Panel'
-    $._formErrors = {}
-    await getLitters($)
-
-    return ctx.render($)
-  }
-
-  on.openCreateLitterPanel = async (ctx, $) => {
-    openPanel(ctx, $, 'create_litter')
-
-    return ctx.render($, ['#panel', '#panel-backdrop'])
-  }
-
-  on.cancelPanel = async (ctx, $) => {
-    closePanel(ctx, $)
-
-    return ctx.render($, '#panel')
-  }
-
-  on.createLitter = async (ctx, $) => {
-    closePanel(ctx, $)
-
-    await Litter.create(ctx.payload)
-    await getLitters($)
-
-    return ctx.render($, ['#litters', '#panel'])
-  }
-
-  on.validate = (ctx, $) => {
-    return validate(ctx, $, Litter)
+    return ctx.redirect('/backend/litters')
   }
 </script>
-
-<section class="h-full container">
-  <h2>Admin Panel</h2>
-
-  <hr />
-
-  <ul>
-    <li><a href="/backend/litters">Litters</a></li>
-    <li><a href="/backend/leads">Leads</a></li>
-  </ul>
-</section>

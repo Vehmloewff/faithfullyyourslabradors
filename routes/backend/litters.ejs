@@ -93,7 +93,7 @@
       class="custom flex gap-4 items-center border-1 p-4 bg-light-3 rounded hover:bg-light-4 cursor-pointer transition-colors"
       href="/backend/litter/<%= litter.id %>"
     >
-      <div class="w-4 h-4 rounded-full bg-<%= litter.sellingDeposits ? 'success' : 'dark-3' %>"></div>
+      <div class="w-4 h-4 rounded-full <%= litter.sellingDeposits ? 'bg-success' : 'bg-dark-4' %>"></div>
 
       <img src="<%= litter.imageUrl %>" class="rounded-full h-12 w-12 object-cover object-center" />
 
