@@ -2,6 +2,7 @@
   const Litter = require('~/models/Litter')
   const Deposit = require('~/models/Deposit')
   const { initPanel, openPanel } = require('~/lib/panel')
+  const { sendEmail } = require('~/lib/send-email.js')
 
   initPanel(on)
 
@@ -69,7 +70,22 @@
   }
 
   on.makeDeposit = async (ctx, $) => {
+    const litter = $.litters.find(litter => litter.id == ctx.payload.litterId)
     await Deposit.create(ctx.payload)
+
+    await sendEmail({
+      name: 'Boss',
+      email: process.env.FROM_EMAIL,
+      subject: 'New Deposit Request',
+      content: `Hey Boss!\n\n${ctx.payload.name} wants to make a deposit on "${litter.title}".\n\nHe left a note saying:\n\n--\n\n${ctx.payload.note}\n\n--\n\nHis email is ${ctx.payload.email}\n\n`
+    })
+
+    await sendEmail({
+      name: ctx.payload.name,
+      email: ctx.payload.email,
+      subject: 'We have received your deposit request',
+      content: `Hey ${ctx.payload.name}!\n\nThis is an automated email to let you know that we have received your deposit request for "${litter.title}".\n\nYou can expect an email from us shortly. If you have any questions, simply reply to this email or call us at (918) 724-2125.\n\nThanks,\nFaithfully Yours Labradors`
+    })
 
     return ctx.flash('success', 'We have received your deposit request and will be in touch shortly!').redirect('/puppies')
   }

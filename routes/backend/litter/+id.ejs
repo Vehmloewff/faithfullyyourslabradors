@@ -3,6 +3,7 @@
   const Deposit = require('~/models/Deposit')
   const { openPanel, initPanel } = require('~/lib/panel')
   const { ObjectId } = require('mongoose')
+  const { sendEmail } = require('~/lib/send-email')
 
   initPanel(on)
 
@@ -91,6 +92,13 @@
     deposit.confirmed = true
     await Deposit.findByIdAndUpdate(depositId, deposit)
 
+    await sendEmail({
+      name: deposit.name,
+      email: deposit.email,
+      subject: 'We Have Received Your Deposit Payment',
+      content: `Hey ${deposit.name}!\n\nThis is an automated email to let you know that we have received your deposit payment for "${$.litter.title}".\n\nWe hope you've found it a pleasure working with us. We are looking forward to handing over another adorable little puppy to it's loving new owner.\n\nThanks,\nFaithfully Yours Labradors`
+    })
+
     return ctx.render($, '#deposits')
   }
 
@@ -100,6 +108,13 @@
 
     deposit.resolved = true
     await Deposit.findByIdAndUpdate(depositId, deposit)
+
+    await sendEmail({
+      name: deposit.name,
+      email: deposit.email,
+      subject: 'We Hope You Enjoy Your Puppy!',
+      content: `Hey ${deposit.name}!\n\nThis is an automated email to let you know that we have closed your file for a puppy in the "${$.litter.title}" litter.\n\nWe hope you enjoy your new little puppy. We think that every one of those pups are beyond adorable. With good treatment and loving care, you have every reason to expect that your little labrador will grow up vigours and loyal, faithfully yours.\n\nWe appreciate your business.\n\nThank you,\nFaithfully Yours Labradors`
+    })
 
     return ctx.render($, '#deposits')
   }
