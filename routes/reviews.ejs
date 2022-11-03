@@ -1,0 +1,13 @@
+<script sync>
+  on.mount = (ctx, $) => {
+    $.title = 'Reviews'
+    if (ctx.session.user) $.admin = true
+
+    return ctx.render($)
+  }
+</script>
+
+<div class="container py-12">
+  <script src="https://apps.elfsight.com/p/platform.js" defer></script>
+  <div class="elfsight-app-a6fd074c-7fe2-4fb5-ae3b-9c6131949093">loading...</div>
+</div>

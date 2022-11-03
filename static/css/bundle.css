@@ -706,6 +706,10 @@ video {
   padding-top: 2rem !important;
   padding-bottom: 2rem !important;
 }
+.py-12 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
 .px-12 {
   padding-left: 3rem !important;
   padding-right: 3rem !important;
@@ -1708,5 +1712,15 @@ fieldset.invalid .invalid-message { /* Safari, Chrome and Opera > 12.1 */ /* Fir
     --tw-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
     --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color) !important;
     box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+  }
+}
+@media (min-width: 1024px) {
+
+  .lg\:flex {
+    display: flex !important;
+  }
+
+  .lg\:hidden {
+    display: none !important;
   }
 }

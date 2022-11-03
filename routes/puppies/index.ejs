@@ -16,6 +16,7 @@
 
   on.mount = async (ctx, $) => {
     $.title = 'Puppies'
+    if (ctx.session.user) $.admin = true
 
     await getLitters($)
 

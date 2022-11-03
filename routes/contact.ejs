@@ -1,8 +1,9 @@
 <script sync>
   on.mount = (ctx, $) => {
     $.title = 'Contact'
+    if (ctx.session.user) $.admin = true
 
-    ctx.render($)
+    return ctx.render($)
   }
 </script>
 

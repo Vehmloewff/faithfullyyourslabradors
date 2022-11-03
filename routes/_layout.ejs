@@ -76,11 +76,11 @@
       </a>
 
       <!-- Desktop nav -->
-      <nav class="hidden md:flex flex-1 justify-end">
+      <nav class="hidden lg:flex flex-1 justify-end">
         {{ partial "/_/links.ejs" }}
       </nav>
       <!-- Mobile nav (hamburger) -->
-      <nav class="flex md:hidden ml-auto" @click="isMobileMenuOpen = !isMobileMenuOpen">
+      <nav class="flex lg:hidden ml-auto" @click="isMobileMenuOpen = !isMobileMenuOpen">
         <div class="ml-auto -mr-4">{{ partial "/_/hamburger.ejs" }}</div>
       </nav>
     </header>
