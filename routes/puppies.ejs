@@ -11,7 +11,8 @@
 
     for (const litter of $.litters) {
       const deposits = await Deposit.find({ litterId: litter.id })
-      litter.depositsLeftCount = litter.expectedCount - deposits.length
+      const confirmedDeposits = deposits.filter(deposit => deposit.confirmed || deposit.resolved)
+      litter.depositsLeftCount = litter.expectedCount - confirmedDeposits.length
     }
   }
 
