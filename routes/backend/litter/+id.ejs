@@ -1,17 +1,28 @@
 <script sync>
   const Litter = require('~/models/Litter')
+  const Deposit = require('~/models/Deposit')
   const { openPanel, initPanel } = require('~/lib/panel')
+  const { ObjectId } = require('mongoose')
 
   initPanel(on)
 
   on.mount = async (ctx, $) => {
     $.id = ctx.req.params.id
-    $.title = 'Ho ho'
     $.litter = await Litter.findOne({ _id: $.id })
+    $.title = $.litter.title
 
     if (!$.litter) return ctx._404()
 
+    $.deposits = await Deposit.find({ litterId: $.id })
+
     return ctx.render($)
+  }
+
+  on.remove = async (ctx, $) => {
+    await Litter.findByIdAndDelete($.id)
+
+    ctx.redirect('/backend/litters')
+    return $
   }
 
   on.openEditPanel = async (ctx, $) => {
@@ -19,18 +30,153 @@
       title: 'Edit Litter',
       submitAction: 'saveLitter',
       easyClose: true,
-      fields: [],
-      buttons: []
+      fields: [
+        {
+          type: 'text',
+          name: 'title',
+          label: 'Title',
+          value: $.litter.title
+        },
+        {
+          type: 'text',
+          name: 'imageUrl',
+          label: 'Image Url',
+          value: $.litter.imageUrl
+        },
+        {
+          type: 'number',
+          name: 'expectedCount',
+          label: 'Expected Count',
+          value: $.litter.expectedCount
+        },
+        {
+          type: 'checkbox',
+          name: 'sellingDeposits',
+          label: 'Selling Deposits',
+          value: $.litter.sellingDeposits || false
+        }
+      ],
+      buttons: [
+        {
+          type: 'button',
+          coloring: 'secondary',
+          label: 'Cancel'
+        },
+        {
+          type: 'submit',
+          coloring: 'primary',
+          label: 'Save'
+        }
+      ]
     })
 
     return ctx.render($)
   }
+
+  on.saveLitter = async (ctx, $) => {
+    await Litter.findByIdAndUpdate($.id, ctx.payload)
+
+    $.litter = ctx.payload
+    $.title = $.litter.title
+
+    return ctx.render($, '#main')
+  }
+
+  on.confirmDeposit = async (ctx, $) => {
+    const depositId = ctx.payload
+    const deposit = $.deposits.find((deposit) => deposit.id === depositId)
+
+    deposit.confirmed = true
+    await Deposit.findByIdAndUpdate(depositId, deposit)
+
+    return ctx.render($, '#deposits')
+  }
+
+  on.resolveDeposit = async (ctx, $) => {
+    const depositId = ctx.payload
+    const deposit = $.deposits.find((deposit) => deposit.id === depositId)
+
+    deposit.resolved = true
+    await Deposit.findByIdAndUpdate(depositId, deposit)
+
+    return ctx.render($, '#deposits')
+  }
 </script>
 
 <div class="container">
-  <div class="flex items-center">
+  <div class="flex flex-col md:flex-row items-start md:items-center">
     <h2 class="flex-1"><%= $.litter.title %></h2>
 
-    <button class="mt-5" s-click="openEditPanel">Edit</button>
+    <div class="mt-5 flex gap-4">
+      <button class="bg-error" s-click="remove">Delete</button>
+      <button s-click="openEditPanel">Edit</button>
+    </div>
   </div>
+
+  <div class="h-8"></div>
+
+  <img class="w-full h-40 object-center object-cover" src="<%= $.litter.imageUrl %>" />
+
+  <div class="flex items-center gap-4">
+    <div class="h-4 w-4 mt-4 rounded-full bg-<%= $.litter.sellingDeposits ? 'success' : 'dark-3' %>"></div>
+
+    <h4>Deposits</h4>
+
+    <div class="mt-4 text-sm opacity-50">
+      <%= $.deposits.filter(deposit => !deposit.confirmed && !deposit.resolved).length %> pending - <%=
+      $.deposits.filter(deposit => deposit.confirmed && !deposit.resolved).length %> confirmed
+    </div>
+  </div>
+
+  <div id="deposits">
+    <% if (!$.deposits.length) { %>
+    <p class="text-dark-5">No Deposits</p>
+    <% } else { %>
+    <div class="flex flex-col gap-4">
+      <% for (const deposit of $.deposits) { %>
+      <div class="flex flex-col sm:flex-row gap-4 p-4 rounded bg-light-3 items-start">
+        <div class="flex-1 flex gap-4 flex-col">
+          <div class="flex gap-4 items-center">
+            <div
+              class="w-4 h-4 bg-<%= deposit.resolved ? 'error' : deposit.confirmed ? 'success':'dark-3' %> rounded-full"
+            ></div>
+
+            <div class="flex-1 flex flex-col gap-2">
+              <div class="text-lg"><%= deposit.name %></div>
+              <div class="text-sm text-dark-3"><%= deposit.email %></div>
+            </div>
+          </div>
+
+          <div class="text-sm"><%= deposit.note %></div>
+        </div>
+
+        <div
+          class="flex sm:flex-col gap-4 items-center sm:gap-0 sm:items-end md:gap-4 md:items-center md:flex-row md:flex-row-reverse"
+        >
+          <a href="mailto:<%= deposit.email %>">
+            <button>Email</button>
+          </a>
+
+          <% if (deposit.resolved) { %>
+          <div class="text-sm opacity-50">resolved</div>
+          <% } else if (deposit.confirmed) { %>
+          <button class="text-error bg-transparent border-error" s-click="resolveDeposit" s-payload="<%= deposit.id %>">
+            Resolve
+          </button>
+          <% } else { %>
+          <button
+            class="text-success border-success bg-transparent"
+            s-click="confirmDeposit"
+            s-payload="<%= deposit.id %>"
+          >
+            Confirm
+          </button>
+          <% } %>
+        </div>
+      </div>
+      <% }} %>
+    </div>
+  </div>
+
+  <div class="h-12"></div>
 </div>

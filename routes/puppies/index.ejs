@@ -1,11 +1,76 @@
 <script sync>
   const Litter = require('~/models/Litter')
+  const Deposit = require('~/models/Deposit')
+  const { initPanel, openPanel } = require('~/lib/panel')
+
+  initPanel(on)
+
+  const getLitters = async ($) => {
+    $.litters = await Litter.find({ sellingDeposits: true })
+
+    for (const litter of $.litters) {
+      const deposits = await Deposit.find({ litterId: litter.id })
+      litter.depositsLeftCount = litter.expectedCount - deposits.length
+    }
+  }
 
   on.mount = async (ctx, $) => {
     $.title = 'Puppies'
-    $.litters = await Litter.find({ sellingDeposits: true })
+
+    await getLitters($)
 
     return ctx.render($)
+  }
+
+  on.startMakeDeposit = async (ctx, $) => {
+    const litterId = ctx.payload
+
+    openPanel(ctx, $, {
+      title: 'Make a Deposit',
+      submitAction: 'makeDeposit',
+      easyClose: true,
+      fields: [
+        {
+          type: 'hidden',
+          value: litterId,
+          name: 'litterId',
+        },
+        {
+          type: 'text',
+          name: 'name',
+          label: 'Name',
+        },
+        {
+          type: 'email',
+          name: 'email',
+          label: 'Email',
+        },
+        {
+          type: 'textarea',
+          name: 'note',
+          label: 'Note',
+        }
+      ],
+      buttons: [
+        {
+          type: 'button',
+          coloring: 'secondary',
+          label: 'Cancel'
+        },
+        {
+          type: 'submit',
+          label: 'Submit'
+        }
+      ]
+    })
+
+    return ctx.render($)
+  }
+
+  on.makeDeposit = async (ctx, $) => {
+    await Deposit.create(ctx.payload)
+
+    return ctx.flash('success', 'We have received your deposit request and will be in touch shortly!').redirect('/puppies')
   }
 </script>
 
@@ -17,12 +82,40 @@
   <p>Sadly, there are no puppies available at this time.</p>
   <p>You can learn about future availability by <a href="/contact">contacting us</a>.</p>
 
-  <% } else { for (let litter of $.litters) { %>
+  <% } else { %>
+  <div class="flex flex-col gap-4" id="litters">
+    <%for (let litter of $.litters) { %>
 
-  <tr class="hover:cursor-pointer" s-click="editBook" s-payload="<%= book.id %>">
-    <td><%= litter.title %></td>
-    <td><%= litter.author %></td>
-  </tr>
+    <div class="flex flex-col md:flex-row rounded overflow-hidden bg-light-3 gap-4">
+      <img
+        class="h-40 w-full md:h-[unset] md:w-40 rounded-none object-cover object-center"
+        src="<%= litter.imageUrl %>"
+        alt="Puppies Photo"
+      />
 
-  <% } %> <% } %>
+      <div class="flex flex-col gap-4 py-4 px-4 md:px-0">
+        <div class="text-lg font-bold"><%= litter.title %></div>
+
+        <div class="flex gap-4 flex-col md:flex-row md:items-center">
+          <button <%= !litter.depositsLeftCount ? "disabled" : '' %> s-click="startMakeDeposit" s-payload="<%= litter.id %>">Make A Deposit</button>
+
+          <div class="text-sm text-dark-4"><%= litter.depositsLeftCount %> deposits available</div>
+        </div>
+      </div>
+    </div>
+
+    <% } %>
+  </div>
+  <% } %>
 </section>
+
+
+<section class="container text-center">
+  <div class="h-12"></div>
+
+  <h3>Can't find your perfect puppy?</h3>
+  <a href="/contact">Talk to us</a>
+
+  <div class="h-12"></div>
+</section>
+

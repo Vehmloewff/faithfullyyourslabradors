@@ -179,7 +179,7 @@
   --form-disabled-border-color: theme(colors.slate.300);
 
   /* Buttons  */
-  --button-main-border: none;
+  --button-main-border: 2px solid transparent;
   --button-main-border-radius: 0.2rem;
   --button-main-font-size: 1rem;
   --button-main-background: var(--brand-1);

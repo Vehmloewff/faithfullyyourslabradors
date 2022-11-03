@@ -26,6 +26,9 @@ const schema = new mongoose.Schema(
     confirmed: {
       type: Boolean
     },
+    resolved: {
+      type: Boolean
+    },
     note: {
       type: String
     }

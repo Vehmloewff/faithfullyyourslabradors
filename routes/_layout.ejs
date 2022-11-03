@@ -5,7 +5,7 @@
 
     <title s-morph="true"><%= error.title || $.title %> | Faithfully Yours Labradors</title>
     <meta name="description" content="<%= $.description %>" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, minimum-scale=1" />
 
     <!-- CSS -->
     <link rel="stylesheet" href="/css/bundle.css" />
@@ -64,6 +64,11 @@
   </head>
 
   <body x-data="{ isMobileMenuOpen: false }">
+    <!-- Flash -->
+    <% if (flash.success) { %>
+      <div class="p-4 bg-success text-light"><%= flash.success %></div>
+    <% } %>
+
     <!-- Header -->
     <header class="z-50 height-[--var(header-height)] pt-1 items-center gap-6">
       <a @click="isMobileMenuOpen = false" href="/" class="pr-4 -mt-4 no-underline">
@@ -79,6 +84,7 @@
         <div class="ml-auto -mr-4">{{ partial "/_/hamburger.ejs" }}</div>
       </nav>
     </header>
+
     <!-- Mobile menu -->
     <menu
       id="mobileMenu"
@@ -90,10 +96,22 @@
     </menu>
 
     <!-- Main Section -->
-    <main>
+    <main id="main">
       {{ slot }}
-      <footer>
-        <span class="flex items-center justify-center h-full">&copy; Copyright 2022 Nobody, Inc.</span>
+      <footer class="flex flex-col gap-4 p-4">
+        <div class="flex items-center justify-center h-full">&copy; Copyright 2022 Nobody, Inc.</div>
+
+        <% if ($.admin) { %>
+        <div class="flex flex-col items-center">
+          <div>You are an admin</div>
+          
+          <div>
+            <a href="/backend">
+              <button>Go To Panel</button>
+            </a>
+          </div>
+        </div>
+        <% } %>
       </footer>
     </main>
   

@@ -1,6 +1,7 @@
 <script sync>
   on.mount = (ctx, $) => {
     $.title = 'Home'
+    if (ctx.session.user) $.admin = true
 
     return ctx.render($)
   }
