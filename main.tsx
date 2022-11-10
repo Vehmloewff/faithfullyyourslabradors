@@ -123,7 +123,7 @@ function HomePage() {
 					<ItemPricing
 						title="English Polar Bear White Puppies"
 						description="Polar Bear White puppies will be AKC limited registration."
-						price={2200}
+						price={1000}
 					/>
 				</div>
 			</Section>
