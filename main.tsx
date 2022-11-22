@@ -1,4 +1,5 @@
 import { BadgeRow } from './BadgeRow.tsx'
+import { CurrentSpecial } from './CurrentSpecial.tsx'
 import { fileServer, setClassFilter, twind, twindSheet, h, http } from './deps.ts'
 import { Hero } from './Hero.tsx'
 import { makeTemplate } from './make-template.tsx'
@@ -58,6 +59,10 @@ function HomePage() {
 	return (
 		<main>
 			<Hero />
+
+			<div class="h-40 md:h-0"></div>
+
+			<CurrentSpecial />
 
 			<Header text="About Us" />
 			<section class="px-20">
