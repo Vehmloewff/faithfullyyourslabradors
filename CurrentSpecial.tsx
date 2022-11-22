@@ -8,8 +8,11 @@ export function CurrentSpecial() {
 				<h3 class="text-2xl text-dark">Christmas Puppies</h3>
 			</div>
 
-			<p class="text-dark">Treat a loved one to a special Christmas gift!</p>
-			<p class="text-dark">Christmas puppies be available to go home first week of December.</p>
+			{/* <p class="text-dark">Treat a loved one to a special Christmas gift!</p> */}
+			<p class="text-dark">
+				Christmas puppies ready to go home the first week of December. These three little ladies are still available. Text or call
+				us for more information!!
+			</p>
 
 			<div class="flex gap-10 flex-col md:flex-row">
 				<div>
